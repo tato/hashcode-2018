@@ -13,5 +13,16 @@ for i in range(N):
 
 
 rides = sorted(rides, key=lambda r: r.s)
-for r in rides:
-    print(r)
+
+cars = []
+for car_index in range(F):
+    cars.append([])
+
+car_index = 0
+for ride_index in range(N):
+    cars[car_index].append(ride_index)
+    car_index += 1
+    car_index = car_index if car_index < F  else 0
+
+for c in cars:
+    print(' '.join((str(x) for x in [len(c)] + c)))
