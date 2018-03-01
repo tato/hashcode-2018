@@ -11,18 +11,39 @@ class Ride:
 for i in range(N):
     rides.append(Ride(input().split()))
 
-
-rides = sorted(rides, key=lambda r: r.s)
+class CarState:
+    def __init__(self):
+        self.time = 0
+        self.x = 0
+        self.y = 0
+        self.rides = []
 
 cars = []
 for car_index in range(F):
-    cars.append([])
+    c = CarState()
+    cars.append(c)
 
-car_index = 0
-for ride_index in range(N):
-    cars[car_index].append(ride_index)
-    car_index += 1
-    car_index = car_index if car_index < F  else 0
+rides = sorted(rides, key=lambda r: r.s)
+
+for ride_index, ride in enumerate(rides):
+    sorted_cars = sorted(cars, key=lambda c: c.time)
+    best_car, best_time = None, 99999999
+    for c in cars:
+        time_left = ride.f - c.time
+        reach_time = abs(ride.a - c.x) + abs(ride.b - c.y)
+        ride_time = abs(ride.x - ride.a) + abs(ride.y - ride.b)
+        wait_time = ride.s - (reach_time + c.time)
+        if reach_time + ride_time <= time_left:
+            end_time = c.time + reach_time + ride_time + wait_time
+            if end_time < best_time:
+                best_car = c
+                best_time = end_time
+
+    if best_car:
+        best_car.x = ride.x
+        best_car.y = ride.y
+        best_car.time += reach_time + ride_time + wait_time
+        best_car.rides.append(ride_index)
 
 for c in cars:
-    print(' '.join((str(x) for x in [len(c)] + c)))
+    print(' '.join((str(x) for x in [len(c.rides)] + c.rides)))
