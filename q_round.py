@@ -25,18 +25,33 @@ for car_index in range(F):
     c = CarState()
     cars.append(c)
 
-for car in cars:
-    while car.time < T and len(rides) > 0:
-        filtered_rides = (r for r in rides if r.f < car.time and (abs(r.x - car.x) + (r.y -  car.y) + car.time < T))
-        sorted_rides = sorted(filtered_rides, key=lambda r: abs(r.a - car.x) + abs(r.b - car.y) + r.s)
-        if len(sorted_rides) > 0:
-            chosen_ride = sorted_rides[0]
-            car.time += abs(chosen_ride.x - car.x) + abs(chosen_ride.y - car.y)
-            car.x = chosen_ride.x
-            car.y = chosen_ride.y
+while len(rides) > 0:
+    car = sorted(cars, key=lambda c: c.time)[0]
+    
+    if car.time > T:
+        break
+    
+    chosen_ride = sorted(rides, key=lambda r: abs(r.a - car.x) + abs(r.b - car.y) + r.s)[0]
 
-            car.rides.append(chosen_ride.i)
-            rides.remove(chosen_ride)
+    car.time += abs(chosen_ride.x - car.x) + abs(chosen_ride.y - car.y)
+    car.x = chosen_ride.x
+    car.y = chosen_ride.y
+
+    car.rides.append(chosen_ride.i)
+    rides.remove(chosen_ride)
+
+
+# for car in cars:
+#     while car.time < T and len(rides) > 0:
+#         sorted_rides = sorted(rides, key=lambda r: abs(r.a - car.x) + abs(r.b - car.y) + r.s)
+#         if len(sorted_rides) > 0:
+#             chosen_ride = sorted_rides[0]
+#             car.time += abs(chosen_ride.x - car.x) + abs(chosen_ride.y - car.y)
+#             car.x = chosen_ride.x
+#             car.y = chosen_ride.y
+# 
+#             car.rides.append(chosen_ride.i)
+#             rides.remove(chosen_ride)
 
 # rides = sorted(rides, key=lambda r: r.s)
 # 
